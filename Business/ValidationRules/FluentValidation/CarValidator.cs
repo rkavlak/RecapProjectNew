@@ -10,7 +10,7 @@ namespace Business.ValidationRules.FluentValidation
     {
         public CarValidator()
         {
-            RuleFor(c => c.CarId).NotEmpty();
+
             RuleFor(c => c.BrandId).NotEmpty();
             RuleFor(c => c.DailyPrice).NotEmpty();
             RuleFor(c => c.DailyPrice).GreaterThan(450).When(c => c.CarId == 1).WithMessage("The Car daily price should not be lower then 450");

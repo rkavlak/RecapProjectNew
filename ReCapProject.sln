@@ -13,7 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleUI", "UserUI\Console
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{90B71332-6B8F-4A6E-88DC-9C3F64CFB957}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{8E8AB54E-61EA-4DC5-A080-FB42ACF23015}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{8E8AB54E-61EA-4DC5-A080-FB42ACF23015}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{9BE6E12B-B90B-4C74-84AC-5CD44EC3BCA1}"
+	ProjectSection(SolutionItems) = preProject
+		C:\Users\RD\Downloads\bmw-3-series-modellfinder.png = C:\Users\RD\Downloads\bmw-3-series-modellfinder.png
+		C:\Users\RD\Downloads\default.jpeg.jpg = C:\Users\RD\Downloads\default.jpeg.jpg
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
