@@ -2,6 +2,8 @@
 using Business.BusinessAspect.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities;
@@ -23,8 +25,9 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        [SecuredOperation("car.add")]
+        [SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
         {
 
@@ -33,6 +36,8 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarAdded);
            
         }
+
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)
         {
             _carDal.Update(car);
@@ -43,15 +48,19 @@ namespace Business.Concrete
             _carDal.Delete(car);
             return new SuccessResult(Messages.CarDeleted);
         }
-    
+
+
+        [CacheAspect]
         public IDataResult<List<Car>> GetAll()
         {
-            if (DateTime.Now.Hour==13)
+            if (DateTime.Now.Hour==5)
             {
                 return new ErrorDataResult<List<Car>>(Messages.MaintenanceTime);
             }
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(),Messages.CarListed);
         }
+
+        [CacheAspect]
         public IDataResult<Car> GetById(int id)
         {
             return new SuccessDataResult<Car>(_carDal.Get(p => p.CarId == id));
@@ -68,6 +77,22 @@ namespace Business.Concrete
         public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
             return new SuccessDataResult<List<CarDetailDto>> (_carDal.GetCarDetails());
+        }
+
+        [CacheRemoveAspect("ICarService.Get")]
+        [TransactionAspect]
+        public IResult AddTransactionalTest(Car car)
+        {
+            _carDal.Add(car);
+            if (car.BrandId==1)
+            {
+                throw new Exception("error");
+            }
+
+            
+            car.Description = "Its a transactional test";
+            _carDal.Add(car);
+            return new SuccessResult(Messages.CarAdded);
         }
     }
 }
