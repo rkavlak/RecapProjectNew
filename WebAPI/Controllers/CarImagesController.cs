@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Utilities.FileHelper;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +30,9 @@ namespace WebAPI.Controllers
         [HttpPost("add")]
         public IActionResult AddAsync([FromForm(Name =("Image"))] IFormFile file, [FromForm] CarImage carImage)
         {
-            var result = _carImageService.Add(file, carImage);
+            carImage.Date = DateTime.Now;
+            carImage.ImagePath = FileHelper.AddAsync(file);
+            var result = _carImageService.Add(carImage);
             if (result.Success)
             {
                 return Ok(result);
@@ -53,7 +56,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getimagesbycarid")]
-        public IActionResult GetImagesById([FromForm(Name = ("CarId"))] int carId)
+        public IActionResult GetImagesById([FromQuery(Name = ("id"))] int carId)
         {
             var result = _carImageService.GetImagesByCarId(carId);
             if (result.Success)
@@ -64,10 +67,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update([FromForm(Name = ("Image"))] IFormFile file, [FromForm(Name = ("Id"))] int Id)
+        public IActionResult Update([FromForm(Name = ("Image"))] IFormFile file, [FromForm] CarImage carImage)
         {
-            var carImage = _carImageService.Get(Id).Data;
-            var result = _carImageService.Update(file, carImage);
+            var oldPath = Path.Combine(Environment.CurrentDirectory, "wwwroot",
+                _carImageService.Get(carImage.Id).Data.ImagePath);
+            carImage.ImagePath = FileHelper.UpdateAsync(oldPath, file);
+            var result = _carImageService.Update(carImage);
             if (result.Success)
             {
                 return Ok(result);
@@ -79,6 +84,8 @@ namespace WebAPI.Controllers
         public IActionResult Delete([FromForm(Name = ("Id"))] int Id)
         {
             var carImage = _carImageService.Get(Id).Data;
+            var oldPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", _carImageService.Get(Id).Data.ImagePath);
+            FileHelper.DeleteAsync(oldPath);
             var result = _carImageService.Delete(carImage);
             if (result.Success)
             {

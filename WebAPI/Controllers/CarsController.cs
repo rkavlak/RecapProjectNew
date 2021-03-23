@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
@@ -25,6 +26,7 @@ namespace WebAPI.Controllers
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
+            Thread.Sleep(1000);
             var result = _carservice.GetAll();
             if (result.Success)
             {
@@ -34,9 +36,9 @@ namespace WebAPI.Controllers
 
         }
         [HttpGet("getcardetails")]
-        public IActionResult GetCarDetails()
+        public IActionResult GetCarDetails(int id)
         {
-            var result = _carservice.GetCarDetails();
+            var result = _carservice.GetCarDetails(id);
             if (result.Success)
             {
                 return Ok(result);
@@ -49,6 +51,31 @@ namespace WebAPI.Controllers
         public IActionResult GetById(int id)
         {
             var result = _carservice.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
+        }
+
+
+        [HttpGet("getbybrand")]
+        public IActionResult GetCarsByBrandId(int brandId)
+        {
+            var result = _carservice.GetCarsByBrandId(brandId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
+        }
+
+        [HttpGet("getbycolor")]
+        public IActionResult GetCarsByColorId(int colorId)
+        {
+            var result = _carservice.GetCarsByColorId(colorId);
             if (result.Success)
             {
                 return Ok(result);

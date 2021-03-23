@@ -55,6 +55,7 @@ namespace Business.Constants
         public static string CarImageUpdated = "Car image updated";
         public static string CarImageListed = "Car image listed";
         public static string CarImageUploadedLimit = "Car image upload limit is 5";
+        public static string CarImageNotFound = "Car image not found";
         //Auth Messages
         public  static string AuthorizationDenied="Autharozied denied";
         public static string UserRegistered ="User registered";
@@ -63,5 +64,6 @@ namespace Business.Constants
         public static string SuccessfulLogin ="Login is successful";
         public static string UserAlreadyExists ="User already exists";
         public static string AccessTokenCreated ="Access token created";
+        
     }
 }

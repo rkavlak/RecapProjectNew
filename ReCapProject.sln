@@ -18,7 +18,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{9BE6E12B-B90B-4C74-84AC-5CD44EC3BCA1}"
 	ProjectSection(SolutionItems) = preProject
 		C:\Users\RD\Downloads\bmw-3-series-modellfinder.png = C:\Users\RD\Downloads\bmw-3-series-modellfinder.png
-		C:\Users\RD\Downloads\default.jpg = C:\Users\RD\Downloads\default.jpg
 	EndProjectSection
 EndProject
 Global

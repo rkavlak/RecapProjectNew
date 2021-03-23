@@ -16,13 +16,15 @@ namespace Core.Utilities.FileHelper
             {
                 var sourcePath = Path.GetTempFileName();
                 if (file.Length > 0)
+                {
 
                     using (var stream = new FileStream(sourcePath, FileMode.Create))
+                    {
                         file.CopyTo(stream);
+                    }
+                }
                 File.Move(sourcePath, result.newPath);
                
-                  
-                
             }
             catch (Exception exception)
             {
@@ -67,15 +69,13 @@ namespace Core.Utilities.FileHelper
         }
         public static (string newPath, string Path2) newPath(IFormFile file)
         {
-            System.IO.FileInfo formfile = new System.IO.FileInfo(file.FileName);
+           FileInfo formfile = new FileInfo(file.FileName);
             string fileExtension = formfile.Extension;
-            var creatingUniqueFileName = Guid.NewGuid().ToString("N")
-                + "_" + DateTime.Now.Month + "_"
-                + DateTime.Now.Day + "_"
-                + DateTime.Now.Year + fileExtension;
+            var creatingUniqueFileName = Guid.NewGuid().ToString("N") + fileExtension;
+               
             string path = Environment.CurrentDirectory + @"\wwwroot\Images";
             string result = $@"{path}\{creatingUniqueFileName}";
-            return (result, $@"{path}\{creatingUniqueFileName}");
+            return (result, $"\\Images\\{creatingUniqueFileName}");
         }
     }
 }
