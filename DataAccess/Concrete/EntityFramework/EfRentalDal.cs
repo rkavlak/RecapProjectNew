@@ -6,37 +6,36 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace DataAccess.Concrete.EntityFramework
 {
     public class EfRentalDal : EfEntityRepositoryBase<Rental, RentACarContext>, IRentalDal
     {
-        public List<RentalDetailDto> GetRentalDetails()
+        public List<RentalDetailDto> GetRentalDetails(Expression<Func<Rental, bool>> filter = null)
         {
             using (RentACarContext context=new RentACarContext())
             {
                 {
-                    var result = from car in context.Cars
-                                 join rental in context.Rentals
-                                 on car.CarId equals rental.CarId
-                                 join customer in context.Customers
-                                 on rental.CustomerId equals customer.UserId
-                                 join user in context.Users
-                                 on customer.UserId equals user.Id
+
+
+                    var result = from rt in filter == null ? context.Rentals : context.Rentals.Where(filter)
+                                 join cr in context.Cars on rt.CarId equals cr.CarId
+                                 join cst in context.Customers on rt.CustomerId equals cst.CustomerId
+                                 join usr in context.Users on cst.UserId equals usr.Id
+                                 join brd in context.Brands on cr.BrandId equals brd.BrandId
+                                 join clr in context.Colors on cr.ColorId equals clr.ColorId
                                  select new RentalDetailDto
                                  {
-                                     Id = rental.CarId,
-                                     CarId = car.CarId,
-                                     CarName = car.Description,
-                                     DailyPrice = car.DailyPrice,
-                                     CustomerName = customer.CompanyName,
-                                     RentDate = rental.RentDate,
-                                     ReturnDate = rental.ReturnDate,
-                                     UserName = user.FirstName + " " + user.LastName,
-
-
-
-
+                                     Id = rt.RentalId,
+                                     CustomerName = cst.CompanyName,
+                                     CarName = brd.BrandName,
+                                     DailyPrice=cr.DailyPrice,
+                                     UserName=usr.FirstName + usr.LastName,
+                                     CustomerId=rt.CustomerId,
+                                     CarId = rt.CarId,
+                                     RentDate = rt.RentDate,
+                                     ReturnDate = rt.ReturnDate
                                  };
                     return result.ToList();
 

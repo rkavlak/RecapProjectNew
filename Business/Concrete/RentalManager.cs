@@ -33,6 +33,16 @@ namespace Business.Concrete
             return new SuccessResult(Messages.RentAdded);
         }
 
+        public IDataResult<Rental> CheckReturnDate(int carId)
+        {
+            var result = _rentalDal.GetAll(r => r.CarId == carId && r.ReturnDate == null);
+            if (result.Count>0)
+            {
+                return new ErrorDataResult<Rental>(Messages.UndeliveredCarRental);
+            }
+            return new SuccessDataResult<Rental>(_rentalDal.Get(c => c.CarId == carId));
+        }
+
         public IResult Delete(Rental rental)
         {
             _rentalDal.Delete(rental);
@@ -42,6 +52,16 @@ namespace Business.Concrete
         public IDataResult<List<Rental>> GetAll()
         {
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(), Messages.RentsListed);
+        }
+
+        public IDataResult<Rental> GetByCarId(int carId)
+        {
+            return new SuccessDataResult<Rental>(_rentalDal.Get(c => c.CarId == carId));
+        }
+
+        public IDataResult<Rental> GetByCustomerId(int id)
+        {
+            return new SuccessDataResult<Rental>(_rentalDal.Get(c => c.CustomerId == id));
         }
 
         public IDataResult<Rental> GetById(int rentalId)
@@ -56,6 +76,11 @@ namespace Business.Concrete
         public IDataResult<List<RentalDetailDto>> GetRentalDetails()
         {
             return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails());
+        }
+
+        public IDataResult<List<RentalDetailDto>> GetRentalsByCarId(int carId)
+        {
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails(c => c.CarId == carId), Messages.RentListed);
         }
 
         public IResult Update(Rental rental)

@@ -5,28 +5,25 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RentalsController : ControllerBase
+    public class CardsController : ControllerBase
     {
-        IRentalService _rentalService;
+        ICardService _cardService;
 
-        public RentalsController(IRentalService rentalService)
+        public CardsController(ICardService cardService)
         {
-            _rentalService = rentalService;
+            _cardService = cardService;
         }
-
 
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            Thread.Sleep(1000);
-            var result = _rentalService.GetAll();
+            var result = _cardService.GetAll();
             if (result.Success)
             {
                 return Ok(result);
@@ -35,42 +32,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbyid")]
-        public IActionResult GetById(int id) 
+        public IActionResult GetById(int cardId)
         {
-            var result = _rentalService.GetById(id);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        [HttpGet("getrentaldetails")]
-        public IActionResult GetRentalDetails()
-        {
-            var result = _rentalService.GetRentalDetails();
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        [HttpGet("getrentaldetailbycarid")]
-        public IActionResult GetRentalDetailByCarId(int carId)
-        {
-            var result = _rentalService.GetRentalsByCarId(carId);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        [HttpGet("iscaravailable")]
-        public IActionResult IsCarAvailable(int carId)
-        {
-            var result = _rentalService.CheckReturnDate(carId);
+            var result = _cardService.GetById(cardId);
             if (result.Success)
             {
                 return Ok(result);
@@ -79,20 +43,50 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(Rental rental) 
+        public IActionResult Add(Card card)
         {
-            var result = _rentalService.Add(rental);
+            var result = _cardService.Add(card);
+            if (result.Success)
+            {
+                return  Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpPost("update")]
+        public IActionResult Update(Card card)
+        {
+            var result = _cardService.Update(card);
             if (result.Success)
             {
                 return Ok(result);
             }
             return BadRequest(result);
         }
-
         [HttpPost("delete")]
-        public IActionResult Delete(Rental rental)
+        public IActionResult Delete(Card card)
         {
-            var result = _rentalService.Delete(rental);
+            var result = _cardService.Delete(card);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpPost("iscardexist")]
+        public IActionResult IsCardExist(Card card)
+        {
+            var result = _cardService.IsCardExist(card);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("getbycardnumber")]
+        public IActionResult GetByCardNumber(string cardNumber)
+        {
+            var result = _cardService.GetByCardNumber(cardNumber);
             if (result.Success)
             {
                 return Ok(result);

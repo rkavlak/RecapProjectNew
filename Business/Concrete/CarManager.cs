@@ -28,7 +28,7 @@ namespace Business.Concrete
             _colorService = colorService;
         }
 
-        [SecuredOperation("car.add,admin")]
+        //[SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
@@ -55,13 +55,13 @@ namespace Business.Concrete
 
         [CacheAspect]
         [PerformanceAspect(1)]
-        public IDataResult<List<Car>> GetAll()
+        public IDataResult<List<CarDetailDto>> GetAll()
         {
             if (DateTime.Now.Hour == 5)
             {
-                return new ErrorDataResult<List<Car>>(Messages.MaintenanceTime);
+                return new ErrorDataResult<List<CarDetailDto>>(Messages.MaintenanceTime);
             }
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarListed);
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(), Messages.CarListed);
         }
 
         [CacheAspect]
@@ -70,9 +70,9 @@ namespace Business.Concrete
             return new SuccessDataResult<Car>(_carDal.Get(p => p.CarId == id));
         }
         [CacheAspect]
-        public IDataResult<List<Car>> GetCarsByBrandId(int id)
+        public IDataResult<List<CarDetailDto>> GetCarsByBrandId(int id)
         {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.BrandId == id));
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(p => p.BrandId == id));
         }
 
         public IDataResult<List<CarDetailDto>> GetCarsByColorId(int id)
